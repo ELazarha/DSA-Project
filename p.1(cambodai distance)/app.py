@@ -74,9 +74,7 @@ g = Graph()
 g.add_edge("pnhom penh", "ompenh", 1)
 g.add_edge("pnhom penh", "siem reap", 100)
 g.add_edge("siem reap", "ompenh", 1)
-g.add_edge("siem reap", "sihanoukville", 500)
-g.add_edge("siem reap", "battambang", 229)
-g.add_edge("battambang", "sihanoukville", 200)
+
 g.generate_adjacency_list()
 sortpath = g.target("pnhom penh", "sihanoukville")
 
