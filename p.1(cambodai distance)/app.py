@@ -71,11 +71,18 @@ class Graph:
 
 # create the graph given in above figure
 g = Graph()
+
+g.add_edge("pnhom penh", "siem reap", 3)
+g.add_edge("siem reap", "sihanoukville", 5)
+g.add_edge("siem reap", "kampot", 2)
+
 g.add_edge("pnhom penh", "ompenh", 1)
 g.add_edge("pnhom penh", "siem reap", 100)
 g.add_edge("siem reap", "ompenh", 1)
 
+
 g.generate_adjacency_list()
-sortpath = g.target("pnhom penh", "sihanoukville")
+
+sortpath = g.target("pnhom penh", "sihanoukville" )
 
 print(f"shortest path from pnhom penh to sihanoukville is {sortpath}")
