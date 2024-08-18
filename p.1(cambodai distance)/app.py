@@ -1,17 +1,22 @@
 from collections import defaultdict, deque
 from typing import Dict, List, Tuple
-from tabulate import tabulate
 
 
-class Graph:
+# Define the Distant class to represent a graph
+class Distant:
+
     def __init__(self):
+        # Initialize the graph as a dictionary where each key is a node and the value is a list of tuples (neighbor, weight)
         self.graph: Dict[str, List[Tuple[str, int]]] = defaultdict(list)
 
     def add_edge(self, u: str, v: str, w: int):
+        # Add an edge from node u to node v with weight w
         self.graph[u].append((v, w))
+        # Since the graph is undirected, also add an edge from node v to node u with weight w
         self.graph[v].append((u, w))
 
     def generate_edges(self) -> List[Tuple[str, Tuple[str, int]]]:
+        # Generate a list of all edges in the graph
         edges = []
         for node in self.graph:
             for neighbour in self.graph[node]:
@@ -19,6 +24,7 @@ class Graph:
         return edges
 
     def generate_adjacency_list(self):
+        # Print the adjacency list representation of the graph
         for node in self.graph:
             neighbours = self.graph[node]
             neighbours_str = " -> ".join(
@@ -28,11 +34,16 @@ class Graph:
             print(f"{node} -> {neighbours_str}")
 
     def dijkstra(self, start: str) -> Tuple[Dict[str, float], Dict[str, str]]:
+        # Implement Dijkstra's algorithm to find the shortest path from the start node to all other nodes
         visited = []
-        distances = {node: float("inf") for node in self.graph}
-        previous_nodes = {node: None for node in self.graph}
-        distances[start] = 0
-        queue = deque([start])
+        distances = {
+            node: float("inf") for node in self.graph
+        }  # Initialize distances to infinity
+        previous_nodes = {
+            node: None for node in self.graph
+        }  # Initialize previous nodes to None
+        distances[start] = 0  # Distance to the start node is 0
+        queue = deque([start])  # Use a deque as a queue for BFS
 
         while queue:
             node = queue.popleft()
@@ -47,16 +58,19 @@ class Graph:
         return distances, previous_nodes
 
     def print_dijkstra_result(self, start: str):
+        # Print the result of Dijkstra's algorithm from the start node
         distances, previous_nodes = self.dijkstra(start)
         print(f"Distances from {start}:")
         for node, distance in distances.items():
             print(f"  {node}: {distance}")
 
     def target(self, start: str, target: str) -> float:
+        # Find the shortest distance from the start node to the target node
         distances, _ = self.dijkstra(start)
         return distances[target]
 
     def shortest_path(self, start: str, target: str):
+        # Find and print the shortest path from the start node to the target node
         distances, previous_nodes = self.dijkstra(start)
         path = []
         current_node = target
@@ -72,8 +86,9 @@ class Graph:
 
 
 # Create the graph
-g = Graph()
+g = Distant()
 
+# List of edges to add to the graph
 edges = [
     ("oddar meanchey", "siem reap", 129),
     ("oddar meanchey", "preah vihear", 164),
@@ -127,11 +142,13 @@ edges = [
     ("svay rieng", "prey veng", 63),
 ]
 
+# Add edges to the graph
 for u, v, w in edges:
     g.add_edge(u, v, w)
 
 
 def main():
+    # Main function to interact with the user
     while True:
         print("\nMenu:")
         print("1. Display adjacency list")
@@ -141,8 +158,10 @@ def main():
         choice = input("Enter your choice: ")
 
         if choice == "1":
+            # Display the adjacency list of the graph
             g.generate_adjacency_list()
         elif choice == "2":
+            # Find the shortest path between two provinces
             start = input("Enter the your province: ")
             target = input("Enter the target province: ")
             if start not in g.graph or target not in g.graph:
@@ -150,19 +169,22 @@ def main():
                 continue
             g.shortest_path(start, target)
         elif choice == "3":
+            # Find the shortest path from a given province to all other provinces
             province = input("Enter the province: ")
-            if province not in g.graph not in g.graph:
+            if province not in g.graph:
                 print("Invalid province. Please try again.")
                 continue
             else:
-                print(g.print_dijkstra_result(province))
-
-        elif choice == "5":
+                g.print_dijkstra_result(province)
+        elif choice == "4":
+            # Exit the program
             print("Exiting...")
             break
         else:
+            # Handle invalid menu choices
             print("Invalid choice. Please try again.")
 
 
 if __name__ == "__main__":
+    # Run the main function if the script is executed directly
     main()
