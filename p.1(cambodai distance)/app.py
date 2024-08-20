@@ -15,14 +15,6 @@ class Distant:
         # Since the graph is undirected, also add an edge from node v to node u with weight w
         self.graph[v].append((u, w))
 
-    def generate_edges(self) -> List[Tuple[str, Tuple[str, int]]]:
-        # Generate a list of all edges in the graph
-        edges = []
-        for node in self.graph:
-            for neighbour in self.graph[node]:
-                edges.append((node, neighbour))
-        return edges
-
     def generate_adjacency_list(self):
         # Print the adjacency list representation of the graph
         for node in self.graph:
@@ -63,11 +55,6 @@ class Distant:
         print(f"Distances from {start}:")
         for node, distance in distances.items():
             print(f"  {node}: {distance}")
-
-    def target(self, start: str, target: str) -> float:
-        # Find the shortest distance from the start node to the target node
-        distances, _ = self.dijkstra(start)
-        return distances[target]
 
     def shortest_path(self, start: str, target: str):
         # Find and print the shortest path from the start node to the target node
@@ -146,10 +133,8 @@ edges = [
 for u, v, w in edges:
     g.add_edge(u, v, w)
 
-
-def main():
-    # Main function to interact with the user
-    while True:
+# Main function to interact with the user
+while True:
         print("\nMenu:")
         print("1. Display adjacency list")
         print("2. Find shortest path")
@@ -184,7 +169,5 @@ def main():
             # Handle invalid menu choices
             print("Invalid choice. Please try again.")
 
-
-if __name__ == "__main__":
     # Run the main function if the script is executed directly
-    main()
+
