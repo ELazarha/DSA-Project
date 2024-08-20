@@ -31,8 +31,8 @@ class HashTable:
             if self.table[h].username == username:  # If the username already exists, break the loop
                 break
             h = (h + 1) % self.size  # Move to the next slot
-            if self.table[h] is None:  # If an empty slot is found, increment the count
-                self.count += 1
+        if self.table[h] is None:  # If an empty slot is found, increment the count
+            self.count += 1
         self.table[h] = item  # Insert the item into the hash table
 
     def get(self, username):
@@ -55,14 +55,14 @@ class HashTable:
         else:
             # Print None for all empty slots
             return None
-    def decrypte(self, password):
-        # Decrypt the password using SHAKE-256
-        decrypted_password = hashlib.shake_256(password.encode("utf-8")).hexdigest(16)
-        return decrypted_password
+
+    def is_full(self):
+        # Check if the hash table is full
+        return self.count == self.size
 
 
-h = HashTable(10)  # Create a hash table of size 10
-
+# Create a hash table of size 1
+h = HashTable(1)
 while True:
     print("\nMenu:")
     print("1. Add a user")
@@ -72,11 +72,15 @@ while True:
     choice = input("Enter your choice: ")
 
     if choice == "1":
+        if (h.is_full()):
+            print("Hash table is full")
+            break
         # Add a user
         username = str(input("Enter the username: "))
         email = str(input("Enter the email: "))
         password = str(input("Enter the password: "))
         h.put(username, email, password)
+
     elif choice == "2":
         # Search for a user
         username = str(input("Enter the username to search: "))
