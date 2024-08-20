@@ -178,7 +178,13 @@ class AVLTree:
 if __name__ == "__main__":
     tree = AVLTree()
 
-    values = []
+    values = [
+             "NICC" , "CKCC" ,
+             "STEM" , "BUILDING A", "BUILDING B" ,
+             "BUILDING C" , "BUILDING D" , "BUILDING T",
+             "STUDY OFFICE", "LIBRARY" , "NISSET COFFEE" ,
+
+    ]
     for value in values:
         tree.insert(value)
     while True:
