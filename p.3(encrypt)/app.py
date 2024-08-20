@@ -2,9 +2,10 @@ import hashlib
 
 
 class HashItem:
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
 
 
 class HashTable:
@@ -21,50 +22,76 @@ class HashTable:
         h = hashlib.shake_256(key.encode("utf-8")).hexdigest(4)
         return int(h, 16) % self.size
 
-    def put(self, key, value):
-        # Encrypt the value using SHAKE-256
-        encrypted_value = hashlib.shake_256(str(value).encode("utf-8")).hexdigest(16)
-        item = HashItem(key, encrypted_value)  # Create a new HashItem
-        h = self._hash(key)  # Get the hash value for the key
+    def put(self, username, email, password):
+        # Encrypt the password using SHAKE-256
+        encrypted_password = hashlib.shake_256(password.encode("utf-8")).hexdigest(16)
+        item = HashItem(username, email, encrypted_password)  # Create a new HashItem
+        h = self._hash(username)  # Get the hash value for the username
         while self.table[h] is not None:  # Handle collisions using linear probing
-            if self.table[h].key == key:  # If the key already exists, break the loop
+            if self.table[h].username == username:  # If the username already exists, break the loop
                 break
             h = (h + 1) % self.size  # Move to the next slot
             if self.table[h] is None:  # If an empty slot is found, increment the count
                 self.count += 1
         self.table[h] = item  # Insert the item into the hash table
 
-    def get(self, key):
-        # Retrieve the value associated with the given key
-        h = self._hash(key)  # Get the hash value for the key
-        while self.table[h] is not None:  # Search for the key in the hash table
-            if self.table[h].key == key:  # If the key is found, return the value
-                return self.table[h].value
+    def get(self, username):
+        # Retrieve the value associated with the given username
+        h = self._hash(username)  # Get the hash value for the username
+        while self.table[h] is not None:  # Search for the username in the hash table
+            if self.table[h].username == username:  # If the username is found, return the value
+                return self.table[h]
             h = (h + 1) % self.size  # Move to the next slot
-        return None  # Return None if the key is not found
+        return None  # Return None if the username is not found
 
     def display(self):
         # Display the contents of the hash table
         for i in range(self.size):
             if self.table[i] is not None:
                 print(
-                    f"[{i}] : UserName : {self.table[i].key} PassWord : {self.table[i].value}"
+                    f"[{i}] : UserName : {self.table[i].username}, Email : {self.table[i].email}, "
+                    f"Encrypted Password : {self.table[i].password}"
                 )
         else:
-            # Print None for  all empty slots
+            # Print None for all empty slots
             return None
+    def decrypte(self, password):
+        # Decrypt the password using SHAKE-256
+        decrypted_password = hashlib.shake_256(password.encode("utf-8")).hexdigest(16)
+        return decrypted_password
 
-h = HashTable(10)  # Create a hash table of size 5
 
-ch = "Y"
-# Loop to get user input
-while ch == "Y" or ch == "y":
-    key = input("Enter the UserName : ")
-    value = input("Enter the PassWord : ")
-    if len(key) == 0 or len(value) == 0:
-        print("Please enter valid email and password")
+h = HashTable(10)  # Create a hash table of size 10
+
+while True:
+    print("\nMenu:")
+    print("1. Add a user")
+    print("2. Search for a user")
+    print("3. Display all users")
+    print("4. Exit")
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        # Add a user
+        username = str(input("Enter the username: "))
+        email = str(input("Enter the email: "))
+        password = str(input("Enter the password: "))
+        h.put(username, email, password)
+    elif choice == "2":
+        # Search for a user
+        username = str(input("Enter the username to search: "))
+        item = h.get(username)
+        if item is not None:
+            print(
+                f"UserName : {item.username}, Email : {item.email}, Encrypted Password : {item.password}"
+            )
+        else:
+            print("User not found")
+    elif choice == "3":
+        # Display all users
+        h.display()
+    elif choice == "4":
+        # Exit the program
+        break
     else:
-        h.put(key, value)  # Insert the key-value pair into the hash table
-        ch = input("Do you want to continue (Y/N) : ")
-        ch.upper()
-h.display()  # Display the contents of the hash table
+        print("Invalid choice. Please try again.")
